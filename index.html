@@ -12,11 +12,73 @@
 </head>
 <body>
 
-<div class="shell">
+<!-- ================= LOGIN ================= -->
+<div class="login" id="login">
+  <div class="login-brand">
+    <div class="lb-in">
+      <div class="logo big">
+        <svg class="mark-svg" viewBox="0 0 34 34" fill="none" aria-hidden="true">
+          <defs><linearGradient id="lg1" x1="0" y1="0" x2="34" y2="34">
+            <stop offset="0" stop-color="#2FD4A8"/><stop offset="1" stop-color="#1AA9E0"/>
+          </linearGradient></defs>
+          <rect width="34" height="34" rx="9" fill="url(#lg1)"/>
+          <path d="M9 12h8M7 17h10M9 22h8" stroke="#04131B" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M20.5 11.5l5.5 5.5-5.5 5.5" stroke="#04131B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div><b>Export<i>Rev</i></b><span>Data Portal</span></div>
+      </div>
+
+      <h2>Automotive data,<br>delivered as an API.</h2>
+      <p>One subscription, one key, three data modules — parts catalogue, technical
+         workshop data and damaged vehicle inventory.</p>
+
+      <ul class="lb-list">
+        <li><span>⚙</span><div><b>Parts Catalogue</b>OE &amp; aftermarket articles with full vehicle fitment</div></li>
+        <li><span>◷</span><div><b>Technical Data</b>Service schedules, labour times, torque &amp; fluids</div></li>
+        <li><span>⚑</span><div><b>Damaged Vehicles</b>Live salvage inventory with condition and title status</div></li>
+      </ul>
+
+      <div class="lb-foot">Metered per call · Plan-gated modules · 99.9% uptime target</div>
+    </div>
+  </div>
+
+  <div class="login-form">
+    <div class="lf-in">
+      <span class="env" style="align-self:flex-start">Preview build</span>
+      <h1>Sign in</h1>
+      <p class="muted" style="margin-bottom:22px">Access your ExportRev data subscription.</p>
+
+      <form id="loginForm" autocomplete="off">
+        <label>Work email</label>
+        <input type="text" id="lg-email" value="m.brandt@nordwest-teile.de">
+        <label>Password</label>
+        <input type="password" id="lg-pass" value="demoaccount">
+        <div class="lf-row">
+          <label class="chk"><input type="checkbox" checked> Keep me signed in</label>
+          <a href="#" class="lnk">Forgot password?</a>
+        </div>
+        <button class="btn pri wide" type="submit">Sign in to portal</button>
+      </form>
+
+      <div class="lf-note">Preview build — any credentials will sign you in.</div>
+      <div class="lf-alt">No account yet? <a href="#" class="lnk" id="lg-plans">See plans &amp; pricing</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= APP ================= -->
+<div class="shell" id="shell" hidden>
   <aside class="side">
     <div class="logo">
-      <div class="mark">ER</div>
-      <div><b>ExportRev</b><span>Data Portal</span></div>
+      <svg class="mark-svg" viewBox="0 0 34 34" fill="none" aria-hidden="true">
+        <defs><linearGradient id="lg2" x1="0" y1="0" x2="34" y2="34">
+          <stop offset="0" stop-color="#2FD4A8"/><stop offset="1" stop-color="#1AA9E0"/>
+        </linearGradient></defs>
+        <rect width="34" height="34" rx="9" fill="url(#lg2)"/>
+        <path d="M9 12h8M7 17h10M9 22h8" stroke="#04131B" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M20.5 11.5l5.5 5.5-5.5 5.5" stroke="#04131B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div><b>Export<i>Rev</i></b><span>Data Portal</span></div>
     </div>
     <div id="nav"></div>
     <div class="sidefoot" id="sidefoot"></div>
@@ -29,7 +91,7 @@
         <input id="gsearch" placeholder="Search article number, OE reference, part name…">
       </div>
       <span class="env">Preview build</span>
-      <div class="avatar">NT</div>
+      <div class="avatar" id="avatar" title="Sign out">NT</div>
     </header>
     <main class="page" id="page"></main>
   </div>

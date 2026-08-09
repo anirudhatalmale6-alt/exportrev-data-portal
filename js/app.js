@@ -41,14 +41,17 @@ function jsonHtml(obj) {
 
 /* ================= NAV ================= */
 const NAV = [
-  { grp: 'Overview', items: [{ id: 'dashboard', ic: '▦', label: 'Dashboard' }] },
+  { grp: 'Overview', items: [
+    { id: 'dashboard', ic: '▦', label: 'Dashboard' },
+    { id: 'how', ic: '◎', label: 'How it works' }
+  ]},
   { grp: 'Data modules', items: [
     { id: 'parts', ic: '⚙', label: 'Parts Catalogue', mod: 'parts' },
-    { id: 'technical', ic: '⛭', label: 'Technical Data', mod: 'technical' },
+    { id: 'technical', ic: '◷', label: 'Technical Data', mod: 'technical' },
     { id: 'salvage', ic: '⚑', label: 'Damaged Vehicles', mod: 'salvage' }
   ]},
   { grp: 'Platform', items: [
-    { id: 'api', ic: '⟨⟩', label: 'API Reference' },
+    { id: 'api', ic: '{ }', label: 'API Reference' },
     { id: 'plans', ic: '◈', label: 'Plans & Billing' },
     { id: 'account', ic: '☰', label: 'Account & Keys' }
   ]}
@@ -126,7 +129,7 @@ function vDashboard() {
   <div class="grid g3">
     ${['parts', 'technical', 'salvage'].map(m => {
       const meta = { parts: ['⚙', 'Parts Catalogue', 'OE & aftermarket articles with full vehicle fitment, cross-references and criteria.', 'parts'],
-                     technical: ['⛭', 'Technical Data', 'Service schedules, labour times, torque specs, fluid capacities and bulb types.', 'technical'],
+                     technical: ['◷', 'Technical Data', 'Service schedules, labour times, torque specs, fluid capacities and bulb types.', 'technical'],
                      salvage: ['⚑', 'Damaged Vehicles', 'Salvage & accident vehicle inventory with condition, title status and live bids.', 'salvage'] }[m];
       const ok = can(m);
       return `<div class="card"><div class="bd">
@@ -143,6 +146,114 @@ function vDashboard() {
 }
 const vehTypeCount = () => VEHICLES.reduce((a, m) => a + m.models.reduce((b, d) => b + d.types.length, 0), 0);
 const modelCount = () => VEHICLES.reduce((a, m) => a + m.models.length, 0);
+
+/* ================= HOW IT WORKS ================= */
+function vHow() {
+  return `
+  <div class="phead">
+    <div>
+      <h1>How it works</h1>
+      <p>From provider feed to billed API call — the four layers behind the portal.</p>
+    </div>
+    <div class="right">
+      <button class="btn gh" data-go="api">API reference</button>
+      <button class="btn pri" data-go="plans">Plans &amp; pricing</button>
+    </div>
+  </div>
+
+  <div class="flow" style="margin-bottom:18px">
+    <div class="fnode">
+      <div class="step">Layer 1</div>
+      <h4>Provider feeds</h4>
+      <p>Licensed automotive data sources, synchronised on their own schedule.</p>
+      <ul>
+        <li>Parts &amp; fitment catalogue</li>
+        <li>Technical / workshop data</li>
+        <li>Salvage &amp; auction inventory</li>
+      </ul>
+    </div>
+    <div class="fnode hl">
+      <div class="step">Layer 2</div>
+      <h4>ExportRev middleware</h4>
+      <p>Holds the provider credentials. Customers never see them and never hold them.</p>
+      <ul>
+        <li>Normalises all feeds to one schema</li>
+        <li>Caches hot responses</li>
+        <li>Nightly &amp; on-demand sync jobs</li>
+      </ul>
+    </div>
+    <div class="fnode hl">
+      <div class="step">Layer 3</div>
+      <h4>Plan gating &amp; metering</h4>
+      <p>Every request is authenticated to a subscription before it is served.</p>
+      <ul>
+        <li>Module access per tier</li>
+        <li>Rate limit 5 / 25 / 100 req/s</li>
+        <li>One usage record per call → billing</li>
+      </ul>
+    </div>
+    <div class="fnode">
+      <div class="step">Layer 4</div>
+      <h4>Customer</h4>
+      <p>Web portal for the buyer's team, REST API for their systems.</p>
+      <ul>
+        <li>Search, filter, drill down</li>
+        <li>CSV export of any result set</li>
+        <li>Direct API with their own key</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="grid g2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="hd"><h3>Why the middleware layer matters</h3><span class="sub">commercial</span></div>
+      <div class="bd">
+        <div class="why">
+          <div class="w"><span>🔐</span><div><b>Credentials stay with us</b><p>The subscriber authenticates against ExportRev, never against the upstream provider.</p></div></div>
+          <div class="w"><span>◷</span><div><b>Every call is attributable</b><p>Each request is tied to a subscription, so usage can be reported, capped and billed.</p></div></div>
+          <div class="w"><span>◈</span><div><b>Tiering is enforced server-side</b><p>Module access comes from the plan record, not the client — upgrades take effect instantly.</p></div></div>
+          <div class="w"><span>⚡</span><div><b>Caching cuts upstream cost</b><p>Repeated lookups are served from cache, so subscriber growth does not scale provider calls 1:1.</p></div></div>
+          <div class="w"><span>▦</span><div><b>One schema for every feed</b><p>Parts, technical and salvage data come back in the same response shape — the customer integrates once.</p></div></div>
+          <div class="w"><span>◎</span><div><b>Providers can be swapped</b><p>The schema belongs to ExportRev, so adding or changing an upstream source does not break a single customer integration.</p></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="hd"><h3>Example request</h3><span class="sub">the whole flow in one call</span></div>
+      <div class="bd">
+        <pre class="code">GET /v1/parts?typeId=201&amp;category=brake
+Authorization: Bearer exr_live_••••••••••••</pre>
+        <div class="hbar" style="margin-top:14px">
+          ${[['Authenticate key → subscription', 3],
+             ['Check module in plan', 5],
+             ['Check rate limit &amp; quota', 4],
+             ['Serve from cache or provider', 78],
+             ['Write usage record', 10]].map(([t, p]) => `
+            <div class="r">
+              <div class="t"><span>${t}</span><span>${p}%</span></div>
+              <div class="b"><i style="width:${p}%"></i></div>
+            </div>`).join('')}
+        </div>
+        <p class="muted" style="font-size:12.2px;margin-top:12px">
+          Relative share of the request path. The provider round-trip is the only expensive
+          step, which is why it is the one that gets cached.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="hd"><h3>What is real in this preview</h3><span class="sub">read before demoing</span></div>
+    <div class="bd">
+      <p class="muted" style="font-size:13.2px;max-width:860px">
+        The portal, the plan gating, the metering, the filtering and the API surface are all real
+        and working. The data behind them is <b>synthetic sample data generated locally</b> — it is
+        shaped like a real automotive feed so that connecting a licensed provider is a data-source
+        change, not a rebuild. No provider data is included, reproduced or implied.
+      </p>
+    </div>
+  </div>`;
+}
 
 /* ================= PARTS ================= */
 function filteredParts() {
@@ -658,7 +769,7 @@ function exportCsv() {
 
 /* ================= RENDER + EVENTS ================= */
 function render() {
-  const v = { dashboard: vDashboard, parts: vParts, technical: vTechnical, salvage: vSalvage, plans: vPlans, api: vApi, account: vAccount }[state.view];
+  const v = { dashboard: vDashboard, how: vHow, parts: vParts, technical: vTechnical, salvage: vSalvage, plans: vPlans, api: vApi, account: vAccount }[state.view];
   $('#page').innerHTML = v();
   bind();
 }
@@ -722,6 +833,27 @@ $('#gsearch').oninput = debounce(e => {
 
 $('#scrim').onclick = hideDrawer;
 document.addEventListener('keydown', e => { if (e.key === 'Escape') hideDrawer(); });
+
+/* ================= LOGIN ================= */
+function signIn() {
+  const lg = $('#login');
+  lg.classList.add('out');
+  $('#shell').hidden = false;
+  setTimeout(() => { lg.style.display = 'none'; }, 340);
+}
+function signOut() {
+  const lg = $('#login');
+  hideDrawer();
+  lg.style.display = '';
+  /* let display take effect before removing the fade-out class */
+  requestAnimationFrame(() => lg.classList.remove('out'));
+  $('#shell').hidden = true;
+  state.view = 'dashboard';
+  renderNav(); render();
+}
+$('#loginForm').onsubmit = e => { e.preventDefault(); signIn(); };
+$('#lg-plans').onclick = e => { e.preventDefault(); state.view = 'plans'; renderNav(); render(); signIn(); };
+$('#avatar').onclick = signOut;
 
 renderNav();
 render();

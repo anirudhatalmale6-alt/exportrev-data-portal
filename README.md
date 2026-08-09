@@ -20,7 +20,16 @@ data modules behind a plan-gated, metered API layer.
 | **Technical Data** | Service schedules, standard repair (labour) times, torque specifications with angle stages, fluid capacities, bulb types |
 | **Damaged Vehicles** | Salvage/accident lots: primary & secondary damage, severity, title status, runs-and-drives, keys, airbags, location, current bid, buy-now, sale date |
 
-Plus the commercial layer:
+Plus:
+
+* **Sign-in screen** — product-style login with the value proposition on the left.
+  Any credentials sign you in (preview build); the avatar top-right signs out again,
+  so the demo can be restarted cleanly in front of an audience.
+* **How it works** — a one-page explanation of the four layers (provider feeds →
+  middleware → plan gating & metering → customer) with the request path broken
+  down. Safe to leave on screen while you talk.
+
+And the commercial layer:
 
 * **Plans & Billing** — three tiers (Starter / Professional / Enterprise) with
   per-tier module access, call quota, seat count and rate limit. Switching plan in
